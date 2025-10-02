@@ -86,7 +86,15 @@ git clone <your-repo-url>
 cd Frontend-Developer-Assignment
 ```
 
-### 2. Quick Start (Windows)
+### 2. One-liner start (any OS)
+From the repo root:
+```bash
+npm start
+```
+- Starts backend on http://localhost:5000 and frontend on http://localhost:3000
+- Uses start.js to run both dev servers concurrently (no extra deps)
+
+### 3. Quick Start (Windows)
 Use the startup script to launch both backend and frontend (assumes Node and npm are available):
 ```bat
 start.bat
@@ -94,7 +102,7 @@ start.bat
 - Backend: http://localhost:5000
 - Frontend: http://localhost:3000
 
-### 3. Backend Setup (manual)
+### 4. Backend Setup (manual)
 ```bash
 cd backend
 npm install
@@ -112,7 +120,7 @@ echo NODE_ENV=development >> .env
 npm run dev
 ```
 
-### 4. Frontend Setup (manual)
+### 5. Frontend Setup (manual)
 ```bash
 cd ../frontend
 npm install
@@ -121,7 +129,7 @@ npm run dev
 
 Frontend will run on `http://localhost:3000`
 
-### 5. Docker (optional)
+### 6. Docker (optional)
 A docker-compose.yml is provided:
 ```bash
 # Provide env in backend/.env for MONGO_USER, MONGO_PASS, DB_NAME
@@ -147,6 +155,12 @@ NODE_ENV=development
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ```
 
+## 🔧 API Endpoints & Postman
+
+- Postman collection: `postman-collection.json` (import this file in Postman)
+  - Variables: `base_url` (defaults to http://localhost:5000/api) and `jwt_token` (set automatically after register/login)
+  - Typical flow: Register -> Login -> copy token if needed -> call protected routes
+
 ## 🔧 API Endpoints
 
 ### Authentication
@@ -171,13 +185,20 @@ NEXT_PUBLIC_API_URL=http://localhost:5000/api
 ## 🧪 Testing the Application
 
 ### Manual Testing Flow:
-1. **Registration**: Create a new account at `/register`
-2. **Login**: Sign in with your credentials at `/login`
-3. **Dashboard**: Access protected dashboard with user profile
-4. **Task Management**: Create, update status, and delete tasks
-5. **Logout**: Secure session termination
+1. Registration: Create a new account at `/register`
+2. Login: Sign in with your credentials at `/login`
+3. Dashboard: Access protected dashboard with user profile
+4. Task Management: Create, update status, and delete tasks
+5. Logout: Secure session termination
 
-### Example API Usage:
+### Backend Tests
+```bash
+cd backend
+npm install
+npm test
+```
+
+### Example API Usage (curl)
 ```bash
 # Register a new user
 curl -X POST http://localhost:5000/api/auth/register \
@@ -222,8 +243,10 @@ curl -X POST http://localhost:5000/api/tasks \
 5. Security: HTTPS, secret management, security headers
 
 ### Token Storage (Auth)
-- In this implementation, JWT is stored in a cookie (client-managed via js-cookie) and attached as an Authorization header for API calls.
-- For production hardening, prefer issuing an HTTP-only, Secure cookie from the backend and validating CSRF via SameSite=strict or a CSRF token. Update the axios layer accordingly.
+- The backend issues an HTTP-only, Secure cookie named `token` on login/register. The browser automatically sends it with subsequent API requests.
+- The frontend axios client is configured with `withCredentials: true` to include cookies. No readable JWT is stored in JavaScript.
+- The backend also returns `token` in the JSON response for tooling (e.g., Postman). This is optional for the app to work but helpful for manual testing.
+- For Postman, the included collection auto-captures the token into the `jwt_token` variable after Register/Login and uses it as `Authorization: Bearer {{jwt_token}}`.
 
 ## 🔒 Security Features
 
@@ -249,6 +272,16 @@ curl -X POST http://localhost:5000/api/tasks \
 - Form validation provides immediate feedback to users
 - API responses include proper HTTP status codes and error messages
 - JWT tokens stored securely in HTTP-only cookies (in production)
+
+## 📬 Submission Instructions
+
+Email your GitHub repo and any logs to:
+- saami@bajarangs.com
+- nagasai@bajarangs.com
+- chetan@bajarangs.com
+CC: sonika@primetrade.ai
+
+Subject: Frontend Developer Task — Frontend Developer Intern
 
 ## 🏆 Assignment Completion
 
