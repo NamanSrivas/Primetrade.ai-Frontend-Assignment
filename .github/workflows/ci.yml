@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install backend deps
+        run: npm ci --prefix backend
+      - name: Run backend tests
+        run: npm test --prefix backend
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install frontend deps
+        run: npm ci --prefix frontend
+      - name: Type check
+        run: npx tsc --noEmit --project frontend/tsconfig.json
+      - name: Lint
+        run: npm run lint --prefix frontend
+      - name: Build frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:5000/api
+        run: npm run build --prefix frontend

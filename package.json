@@ -1,0 +1,9 @@
+{
+  "name": "frontend-developer-assignment",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Root runner for backend and frontend dev servers",
+  "scripts": {
+    "start": "node start.js"
+  }
+}

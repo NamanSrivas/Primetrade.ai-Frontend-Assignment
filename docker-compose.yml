@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  mongo:
+    image: mongo:6
+    container_name: taskmgr-mongo
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS}
+    ports:
+      - "27017:27017"
+
+  backend:
+    build: ./backend
+    container_name: taskmgr-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      - MONGODB_URI=mongodb://${MONGO_USER}:${MONGO_PASS}@mongo:27017/${DB_NAME}?authSource=admin
+      - NODE_ENV=development
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+
+  frontend:
+    build: ./frontend
+    container_name: taskmgr-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
